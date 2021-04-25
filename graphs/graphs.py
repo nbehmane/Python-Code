@@ -39,6 +39,7 @@ class Graph:
                 self.explore(u)
             if self.colors[u] == self.colors[v]:
                 return False
+
         self.postVisit[v] = self.clock 
         self.clock += 1
         return True
@@ -96,21 +97,14 @@ def main():
             i = 0
             for v in l:
                 if i % 2 > 0:
-                    blue.append(v)
+                    blue.append(str(v))
                     i += 1
                 else:
-                    red.append(v)
+                    red.append(str(v))
                     i += 1
-            for i in range(len(red)):
-                if i != len(red) - 1:
-                    print("{}, ".format(red[i]), end='')
-                else:
-                    print("{}".format(red[i]))
-            for i in range(len(blue)):
-                if i != len(blue) - 1:
-                    print("{}, ".format(blue[i]), end='')
-                else:
-                    print("{}".format(blue[i]))
+            
+            print(', '.join(red))
+            print(', '.join(blue))
     else:
         print("Is not 2-colorable.")
     
