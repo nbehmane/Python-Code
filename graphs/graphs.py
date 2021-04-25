@@ -1,3 +1,5 @@
+import sys
+
 class Graph:
     def __init__(self, edgeList):
         self.edges = []
@@ -12,6 +14,7 @@ class Graph:
         for edge in self.edges:
             self.adj[edge[0]].append(edge[1])
             self.adj[edge[1]].append(edge[0])
+        self.components = []
     
     def _addVerts(self, vert):
         self.verts.append(vert)
@@ -41,15 +44,14 @@ class Graph:
         return True
 
     def dfs(self):
-        components = []
         for v in self.verts:
             if self.visited[v] == 0:
-                components.append(v)
+                self.components.append(v)
                 bipartite = self.explore(v)
                 if bipartite == False:
-                    print("NOT BIPARTITE")
-                    return
-        print("BIPARTITE")
+                    return False
+        return True
+
     
     def __repr__(self):
         return (
@@ -59,14 +61,59 @@ class Graph:
             self.preVisit, self.postVisit, self.colors))
 
 
+def getEdgeList(fil):
+    f = open(fil, "r")
+    edgeList = []
+
+    while True:
+        line = f.readline()
+        line = line.replace(',', '')
+        line = [int(x) for x in line.split()]
+        if not line:
+            break
+        edgeList.append(line)
+
+    f.close()
+    return edgeList
+
 def main():
-    edges = [[0, 1], [1, 2], [2, 3], [3, 0], [4, 5]]
+    edges = getEdgeList(sys.argv[1])
     g = Graph(edges)
-    print(g)
-    print()
-    g.dfs()
-    print()
-    print(g)
+    
+    if g.dfs():
+        print("Is 2-colorable:")
+        componentVerts = []
+        for i in range(len(g.components)):
+            try:
+                componentVerts.append(
+                    g.verts[g.components[i]:g.components[i+1]])
+            except IndexError:
+                componentVerts.append(g.verts[g.components[i]:])
+    
+        for l in componentVerts:
+            red = []
+            blue = []
+            i = 0
+            for v in l:
+                if i % 2 > 0:
+                    blue.append(v)
+                    i += 1
+                else:
+                    red.append(v)
+                    i += 1
+            for i in range(len(red)):
+                if i != len(red) - 1:
+                    print("{}, ".format(red[i]), end='')
+                else:
+                    print("{}".format(red[i]))
+            for i in range(len(blue)):
+                if i != len(blue) - 1:
+                    print("{}, ".format(blue[i]), end='')
+                else:
+                    print("{}".format(blue[i]))
+    else:
+        print("Is not 2-colorable.")
+    
 
 if __name__ == '__main__':
     main()
