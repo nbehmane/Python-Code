@@ -6,6 +6,7 @@ class Graph:
         self.verts = []
         self.clock = 0
         self._addEdges(edgeList)
+        self.verts.sort()
         self.preVisit = [0 for i in range(len(self.verts))]
         self.postVisit = [0 for i in range(len(self.verts))]
         self.colors = [False for i in range(len(self.verts))]
@@ -84,24 +85,27 @@ def main():
     if g.dfs():
         print("Is 2-colorable:")
         componentVerts = []
+        colorVerts = []
         for i in range(len(g.components)):
             try:
                 componentVerts.append(
                     g.verts[g.components[i]:g.components[i+1]])
             except IndexError:
                 componentVerts.append(g.verts[g.components[i]:])
-    
-        for l in componentVerts:
+            try:
+                colorVerts.append(
+                    g.colors[g.components[i]:g.components[i+1]])
+            except IndexError:
+                colorVerts.append(g.colors[g.components[i]:])
+            
+        for i in range(len(componentVerts)):
             red = []
             blue = []
-            i = 0
-            for v in l:
-                if i % 2 > 0:
-                    blue.append(str(v))
-                    i += 1
+            for j in range(len(componentVerts[i])):
+                if colorVerts[i][j] == False: 
+                    red.append(str(componentVerts[i][j]))
                 else:
-                    red.append(str(v))
-                    i += 1
+                    blue.append(str(componentVerts[i][j]))
             
             print(', '.join(red))
             print(', '.join(blue))
