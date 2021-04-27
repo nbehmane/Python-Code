@@ -35,8 +35,8 @@ class Graph:
         self.clock += 1
 
         for u in self.adj[v]:
+            self.colors[u] = not self.colors[v]
             if self.visited[u] == 0:
-                self.colors[u] = not self.colors[v]
                 self.explore(u)
             if self.colors[u] == self.colors[v]:
                 return False
@@ -46,12 +46,13 @@ class Graph:
         return True
 
     def dfs(self):
+        bipartite = True
         for v in self.verts:
             if self.visited[v] == 0:
                 self.components.append(v)
                 bipartite = self.explore(v)
-                if bipartite == False:
-                    return False
+            if bipartite == False:
+                return False
         return True
 
     
