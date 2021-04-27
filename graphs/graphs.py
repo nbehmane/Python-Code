@@ -33,7 +33,7 @@ class Graph:
 
         self.preVisit[v] = self.clock
         self.clock += 1
-
+        self.colors[v] = True
         for u in self.adj[v]:
             self.colors[u] = not self.colors[v]
             if self.visited[u] == 0:
